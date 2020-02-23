@@ -3,6 +3,23 @@
            https://api.github.com/users/<your name>
 */
 
+const cards = document.querySelector('.cards')
+
+axios
+  .get('https://api.github.com/users/masantea')
+  .then(Response =>{
+    const newCard=  makeCard(Response)
+    cards.appendChild(newCard)
+
+    console.log(Response);
+})
+
+  .catch(error =>{
+
+  console.log(error);
+})
+
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -24,7 +41,25 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['tetondan','dustinmyers','justsml','luishrd','EJaona'];
+
+followersArray.forEach(follower =>{
+
+  axios
+  .get(`https://api.github.com/users/${follower}`)
+  .then(Response =>{
+    const newCard=  makeCard(Response)
+    cards.appendChild(newCard)
+
+    console.log(Response);
+})
+
+  .catch(error =>{
+
+  console.log(error);
+})
+
+})
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -43,9 +78,7 @@ const followersArray = [];
     <p>Bio: {users bio}</p>
   </div>
 </div>
-
 */
-
 /* List of LS Instructors Github username's: 
   tetondan
   dustinmyers
@@ -53,3 +86,60 @@ const followersArray = [];
   luishrd
   bigknell
 */
+
+ const makeCard = obj => {
+
+  const card = document.createElement('div')
+  card.classList.add('card')
+
+  const img = document.createElement ('img')
+  img.src = obj.data.avatar_url
+
+  const cardInfo = document.createElement('div')
+  cardInfo.classList.add('card-info')
+
+  const name = document.createElement('h3')
+  name.classList.add('name')
+  name.textContent = obj.data.name
+
+  const username = document.createElement('p')
+  username.classList.add('username')
+  username.textContent = obj.data.login
+
+  const location = document.createElement('p')
+  location.textContent = `Location: ${obj.data.location}`
+
+  const link = document.createElement('a')
+  link.href = obj.data.url
+  link.textContent = 'Click here'
+  link.target = '_blank'
+
+  const profile = document.createElement('p')
+  profile.textContent = `Profile: ${link}`
+
+  const followers = document.createElement('p')
+  followers.textContent = `Followers: ${obj.data.followers}`
+
+  const following = document.createElement('p')
+  following.textContent = `Following: ${obj.data.following}`
+
+  const bio = document.createElement('p')
+  bio.textContent = `Bio: ${obj.data.bio}`
+
+card.appendChild(img)
+card.appendChild(cardInfo)
+
+cardInfo.appendChild(name)
+cardInfo.appendChild(username)
+cardInfo.appendChild(location)
+cardInfo.appendChild(profile)
+cardInfo.appendChild(followers)
+cardInfo.appendChild(following)
+cardInfo.appendChild(bio)
+
+profile.appendChild(link)
+
+return card;
+}
+
+
